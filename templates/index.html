@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Surveillance Camera</title>
+    <!-- Include the Socket.IO client script; ensure this version matches with your server-side Flask-SocketIO version -->
+    <script src="https://cdn.socket.io/socket.io-3.1.3.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establish connection with the server
+            var socket = io();
+
+            var alarmAudio = new Audio('{{ url_for('static', filename='alarm.mp3') }}');
+
+            socket.on('motion_detected', function(data) {
+                if(data.status) {
+                    alarmAudio.play();
+                } else {
+                    alarmAudio.pause();
+                    alarmAudio.currentTime = 0;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Surveillance Camera Feed</h1>
+    <img src="{{ url_for('video_feed') }}" id="video_feed">
+</body>
+</html>
